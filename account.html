@@ -1,0 +1,16 @@
+{% load static %}
+
+{% block content %}
+    <h1>Account Information</h1>
+    <div class="account-info">
+        <p>Username: {{ username }}</p>
+        <p>Full Name: {{ fname }} {{ lname }}</p>
+        <p>Email: {{ email }}</p>
+        <p>Cash Available: {{ cash_available }}</p>
+        <p>Points: {{ points }}</p>
+    </div>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/account.css' %}">
+{% endblock %}
