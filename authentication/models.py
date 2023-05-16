@@ -9,6 +9,7 @@ class Customer(models.Model):
    name = models.CharField(max_length=200, null=True)
    email = models.CharField(max_length=200, null=True)
    points = models.IntegerField(default=0)
+   cash_available = models.FloatField(default=0)
    
    def __str__(self):
         return self.name
@@ -49,10 +50,14 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    payment_method = models.CharField(max_length=10, choices=[('cash', 'Cash'), ('points', 'Points')], default='cash')
     
     @property
     def get_total(self):
-        total = self.product.price * self.quantity
+        if self.payment_method == 'points':
+            total = 0  
+        else:
+            total = self.product.price * self.quantity
         return total
     
 

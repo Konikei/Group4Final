@@ -1,9 +1,16 @@
-<div id="credit-info">
-    <hr>
-    <p>Point Information:</p>
-    <hr>
-    <div class="form-field">
-        <input class="form-control" type="text" name="Point using" placeholder="Point using..">
-    </div>
-    <button type="submit">Submit</button>
-</div>
+{% extends 'shoppingpage/main.html' %}
+{% load static %}
+{% block content %}
+    <h3>Point Redemption</h3>
+    
+    <p>Current Points: {{ user.customer.points }}</p>
+    
+    <form method="POST" action="{% url 'point' %}">
+        {% csrf_token %}
+        
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" min="1" required>
+        
+        <button type="submit">Redeem Points</button>
+    </form>
+{% endblock %}

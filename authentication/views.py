@@ -71,7 +71,6 @@ def signin(request):
         
     return render(request, "authentication/signin.html")
            
-          
 def signout(request):
     logout(request)
     messages.success(request, "Logged out successfully!")
@@ -107,16 +106,90 @@ def checkout(request):
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
+
+        if request.method == 'POST':
+            payment_method = request.POST.get('payment_method')
+            if payment_method == 'cash':
+                cash_total = sum([item.get_total for item in items])
+                if customer.cash_available >= cash_total:
+                    customer.cash_available -= cash_total
+                    customer.save()
+                    messages.success(request, f'Payment of ${cash_total:.2f} successful.')
+                else:
+                    messages.error(request, 'Insufficient cash available for payment.')
+
+            elif payment_method == 'points':
+                points_total = sum([item.get_total for item in items if item.payment_method == 'points'])
+                if customer.points >= points_total:
+                    customer.points -= points_total
+                    customer.save()
+                    messages.success(request, f'Payment of {points_total} points successful.')
+                else:
+                    messages.error(request, 'Insufficient points available for payment.')
+
+            order.complete = True
+            order.save()
+            return redirect('home')
+        
     else:
         items = []
-        order = {'get_cart_total':0, 'get_cart_items':0}
-    context = {'items':items, 'order':order}
+        order = {'get_cart_total': 0, 'get_cart_items': 0}
+
+    context = {'items': items, 'order': order}
     return render(request, 'shoppingpage/checkout.html', context)
 
 def credit(request):
-    context = {}
-    return render(request, 'shoppingpage/credit.html', context)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            amount = request.POST.get('amount')
+            
+            try:
+                amount = float(amount)
+                if amount > 0:
+                    customer = request.user.customer
+                    
+                    if customer.cash_available >= amount:
+                        customer.cash_available -= amount
+                        customer.save()
+                        
+                        messages.success(request, f"Successfully credited {amount} to your account!")
+                        return redirect('account')
+                    else:
+                        messages.error(request, "Insufficient funds")
+                else:
+                    messages.error(request, "Invalid transaction amount!")
+            except ValueError:
+                messages.error(request, "Invalid transaction amount")
+        
+    else:
+        return redirect('home')
     
+    return render(request, 'shoppingpage/credit.html')
+
 def point(request):
-    context = {}
-    return render(request, 'shoppingpage/point.html', context)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            quantity = request.POST.get('quantity')
+            
+            try:
+                quantity = int(quantity)
+                if quantity > 0:
+                    customer = request.user.customer
+                    
+                    if customer.points >= quantity:
+                        customer.points -= quantity
+                        customer.save()
+                        
+                        messages.success(request, f"Successfully redeemed {quantity} points")
+                        return redirect('account')
+                    else:
+                        messages.error(request, "Insufficient points")
+                else:
+                    messages.error(request, "Invalid transaction quantity")
+            except ValueError:
+                messages.error(request, "Invalid transaction quantity")
+        
+    else:
+        return redirect('home')
+    
+    return render(request, 'shoppingpage/point.html')
