@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from mysite import settings
 from django.core.mail import send_mail
 from .models import *
+from .models import User, Order
 
 # Create your views here.
 def home(request):
@@ -111,3 +112,11 @@ def checkout(request):
         order = {'get_cart_total':0, 'get_cart_items':0}
     context = {'items':items, 'order':order}
     return render(request, 'shoppingpage/checkout.html', context)
+
+def credit(request):
+    context = {}
+    return render(request, 'shoppingpage/credit.html', context)
+    
+def point(request):
+    context = {}
+    return render(request, 'shoppingpage/point.html', context)

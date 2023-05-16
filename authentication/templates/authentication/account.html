@@ -17,16 +17,17 @@
         <div class="col-lg-12">
             <div class="box-element">
                 <a class="btn btn-outline-dark" href="{% url 'shopnow' %}"> &#x2190; Start Shopping</a>
+            </div>
             <br>
             <br>
 
-        <div class="cart-row">
-            <div style="flex:2" ></div>
-            <div style="flex:2" ><strong>Username:</strong></div>
-            <div style="flex:1" ><strong>Name:</strong></div>
-            <div style="flex:1" ><strong>Email:</strong></div>
-            <div style="flex:1" ><strong>Cash available:</strong></div>
-            <div style="flex:1" ><strong>Points:</strong></div>
+            <div class="cart-row">
+                <div style="flex:2"></div>
+                <div style="flex:2"><strong>Username:</strong> {{ user.username }}</div>
+                <div style="flex:2"><strong>Email:</strong> {{ user.email }}</div>
+                <div style="flex:2"><strong>Points:</strong> {{ 10 }}</div>
+            </div>
+
         </div>
 
     </div>

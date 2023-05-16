@@ -39,14 +39,6 @@
                 <input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue"> 
             </form>
         </div>
-        <br>
-
-        <div class="box-element" id="payment-info"><small>Credit Card Options</small>
-        </div>
-        <div class="box-element" id="payment-info"><small>Points Options</small>
-        </div>
-        <div class="box-element" id="payment-info"><small>Cash Options</small>
-        </div>
     </div>
     
     <div class="col-lg-6">
@@ -59,14 +51,18 @@
                 <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
                 <div style="flex:2"><p>{{item.product.name}}</p></div>
                 <div style="flex:1"><p>${{item.product.price}}</p></div>
-                <div style="flex:1"><p>x{{item.quantity}}</p></div>
+                <div style="flex:1"><p>{{item.quantity}}</p></div>
 
             </div>
             {% endfor %}
             <h5>Items:   {{order.get_cart_items}}</h5>
             <h5>Total:   ${{order.get_cart_total|floatformat:1}}</h5>
-            <h5>Point earned: 5</h5>
         </div>
     </div>
+    <br>
+        <h3>Payment Options</h3>
+     
+            <button type="submit"> <a href="/credit"> Credit Card</a></button>
+            <button type="submit"> <a href="/point"> Point</a></button>
  </div>
 {% endblock content %}
