@@ -8,9 +8,12 @@ class Customer(models.Model):
    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
    name = models.CharField(max_length=200, null=True)
    email = models.CharField(max_length=200, null=True)
+   cash_available = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+   points = models.IntegerField(default=0)
    
    def __str__(self):
         return self.name
+   
 
 class Product(models.Model):
     name = models.CharField(max_length=200, null=True)
@@ -44,7 +47,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
-    oder = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
     

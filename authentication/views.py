@@ -69,11 +69,17 @@ def signin(request):
             return redirect('home')
         
     return render(request, "authentication/signin.html")
-
+           
+          
 def signout(request):
     logout(request)
     messages.success(request, "Logged out successfully!")
     return redirect('home')
+
+
+def account(request):
+    context = {}
+    return render(request, 'authentication/account.html', context)
 
 def shopnow(request):
     messages.success(request, "Shop now")
@@ -85,9 +91,8 @@ def store(request):
     return render(request, 'shoppingpage/store.html', context)
 
 def cart(request):
-
     if request.user.is_authenticated:
-        customer = request.user.customer
+        customer = request.user.customer 
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
     else:
